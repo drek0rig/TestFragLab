@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataTest</title>
+</head>
+<body>
+<div>
+    <label for="inputTableName"></label><input type="text" id="inputTableName" />
+</div>
+<div>
+    <input type="button" id="CreateTable" value="Create table" onclick="createTable()"/>
+</div>
+<div>
+    <label for="inputColumn"></label><input type="text" id="inputColumn" />
+</div>
+<div>
+    <input type="button" id="AddColumn" value="Add column" onclick="addColumn()"/>
+</div>
+<div>
+    <label for="inputDeletedTable"></label><input type="text" id="inputDeletedTable" />
+</div>
+<div>
+    <input type="button" id="DeleteTable" value="Delete table" onclick="deleteTable()"/>
+</div>
+
+<script type="text/javascript">
+    var webSocket =
+        new WebSocket('ws://localhost:8080/my-TestFragLab-1.0-SNAPSHOT/ws');
+
+    webSocket.onerror = function(event) {
+        onError(event)
+    };
+
+    webSocket.onopen = function(event) {
+        onOpen(event)
+    };
+
+    webSocket.onmessage = function(event) {
+        onMessage(event)
+    };
+
+    function onMessage(event) {
+        document.getElementById('messages').innerHTML
+            += '<br />' + event.data;
+    }
+
+    function onOpen(event) {
+        document.getElementById('messages').innerHTML
+            = 'Connection established';
+    }
+
+    function onError(event) {
+        alert(event.data);
+    }
+
+    function createTable() {
+        var text = document.getElementById("inputTableName").value;
+        webSocket.send("createtable," + text);
+    }
+
+    function addColumn() {
+        var text = document.getElementById("inputColumn").value;
+        webSocket.send("addcolumn," + text);
+    }
+
+    function deleteTable() {
+        var text = document.getElementById("inputDeletedTable").value;
+        webSocket.send("deletetable," + text);
+    }
+
+    // function updateTable() {
+    //     webSocket.send('update');
+    // }
+</script>
+</body>
+</html>
